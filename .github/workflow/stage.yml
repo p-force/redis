@@ -1,4 +1,4 @@
-name: Deploy Redis
+name: Docker CI/CD
 
 on:
   push:
