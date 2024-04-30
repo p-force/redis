@@ -1,7 +1,19 @@
-version: '3.7'
+name: Deploy Redis
 
-services:
-  redis:
-    image: redis
-    ports:
-      - "6379:6379"
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Start Redis container
+      run: docker run --name my-redis-container -d -p 6379:6379 redis:latest
+
+    # Другие шаги, если необходимо
