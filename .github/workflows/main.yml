@@ -1,3 +1,23 @@
+# name: Docker CI/CD
+
+# on:
+#   push:
+#     branches:
+#       - main
+
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v2
+
+#       - name: Start Redis container
+#         run: docker run --name my-redis-container -d -p 6379:6379 redis:latest --bind 0.0.0.0
+
+#     # Другие шаги, если необходимо
+
 name: Docker CI/CD
 
 on:
@@ -14,6 +34,19 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Start Redis container
-        run: docker run --name my-redis-container -d -p 6379:6379 redis:latest --bind 0.0.0.0
+        run: |
+          docker run --name my-redis-container -d -p 6379:6379 redis:latest --bind 0.0.0.0
 
-    # Другие шаги, если необходимо
+      - name: Wait for Redis to start
+        run: |
+          until docker exec my-redis-container redis-cli ping; do
+            echo "waiting for redis"
+            sleep 1
+          done
+
+      - name: Interact with Redis
+        run: |
+          # Вставка данных для демонстрации
+          docker exec my-redis-container redis-cli SET mykey "Hello, Redis!"
+          # Получение и вывод данных
+          docker exec my-redis-container redis-cli GET mykey
